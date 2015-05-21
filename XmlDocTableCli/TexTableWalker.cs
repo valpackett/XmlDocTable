@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -59,7 +60,10 @@ namespace XmlDocTableCli
 
         public override void OnProperty(PropertyDeclarationSyntax property, DocumentationCommentTriviaSyntax doc)
         {
-            this[property].AddProperty($"{Esc(property.Identifier.ValueText)} & {Esc(property.Modifiers.ToString())} & {Esc(property.Type.ToString())} & {Esc(property.AccessorList.ToString())} & {Esc(doc.CommentField("summary"))} \\\\");
+            var al = property.AccessorList.ToString();
+            al = Regex.Replace(al, @"(get|set)\s*\{.*\}", @"$1");
+            al = Regex.Replace(al, @"\s+", " ");
+            this[property].AddProperty($"{Esc(property.Identifier.ValueText)} & {Esc(property.Modifiers.ToString())} & {Esc(property.Type.ToString())} & {Esc(al)} & {Esc(doc.CommentField("summary"))} \\\\");
         }
 
         public override void OnMethod(MethodDeclarationSyntax method, DocumentationCommentTriviaSyntax doc)
