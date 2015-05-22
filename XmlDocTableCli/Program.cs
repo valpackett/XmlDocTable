@@ -44,7 +44,7 @@ namespace XmlDocTableCli
                 if (table.Value.MethodsCount > 0)
                 {
                     sb.AppendLine(@"\begin{tabular}{ l | l | l | l | l }");
-                    sb.AppendLine(@"\multicolumn{5}{ l }{Properties}");
+                    sb.AppendLine(@"\multicolumn{5}{ l }{Methods}");
                     sb.AppendLine(@"\hline");
                     sb.Append(table.Value.MethodsTable);
                     sb.AppendLine(@"\end{tabular}");
