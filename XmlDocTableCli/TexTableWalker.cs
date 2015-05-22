@@ -70,7 +70,7 @@ namespace XmlDocTableCli
         /// <summary>Adds a property description to the member table of its class.</summary>
         public override void OnProperty(PropertyDeclarationSyntax property, DocumentationCommentTriviaSyntax doc)
         {
-            var al = property.AccessorList.ToString();
+            var al = property.AccessorList?.ToString() ?? "{ get; }"; // C# 6.0 short expression syntax means no AccessorList
             al = Regex.Replace(al, @"(get|set)\s*\{.*\}", @"$1");
             al = Regex.Replace(al, @"\s+", " ");
             this[property].AddProperty($"{Esc(property.Identifier.ValueText)} & {Esc(property.Modifiers.ToString())} & {Esc(property.Type.ToString())} & {Esc(al)} & {Esc(doc.CommentField("summary"))} \\\\");
