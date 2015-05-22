@@ -7,6 +7,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace XmlDocTableCli
 {
+    /// <summary>
+    /// A documentation generator that makes separate LaTeX tables for each class
+    /// and a class description table.
+    /// </summary>
     public class TexTableWalker : DocWalker
     {
         public class ClassMembers
@@ -43,21 +47,27 @@ namespace XmlDocTableCli
         }
 
         readonly StringBuilder _classTable = new StringBuilder();
+
+        /// <summary>The generated member tables in LaTeX syntax.</summary>
         public Dictionary<string, ClassMembers> MemberTables { get; } = new Dictionary<string, ClassMembers>();
 
+        /// <summary>The generated class table in LaTeX syntax.</summary>
         public string ClassTable => _classTable.ToString();
 
+        /// <summary>Adds a class description to the class table.</summary>
         public override void OnClass(ClassDeclarationSyntax klass, DocumentationCommentTriviaSyntax doc)
         {
             _classTable.AppendLine($"{Esc(klass.Identifier.ValueText)} & {Esc(doc.CommentField("summary"))} \\\\");
         }
 
+        /// <summary>Adds a field description to the member table of its class.</summary>
         public override void OnField(FieldDeclarationSyntax field, DocumentationCommentTriviaSyntax doc)
         {
             foreach (var variable in field.Declaration.Variables)
                 this[field].AddField($"{Esc(variable.Identifier.ValueText)} & {Esc(field.Modifiers.ToString())} & {Esc(field.Declaration.Type.ToString())} & {Esc(doc.CommentField("summary"))} \\\\");
         }
 
+        /// <summary>Adds a property description to the member table of its class.</summary>
         public override void OnProperty(PropertyDeclarationSyntax property, DocumentationCommentTriviaSyntax doc)
         {
             var al = property.AccessorList.ToString();
@@ -66,13 +76,16 @@ namespace XmlDocTableCli
             this[property].AddProperty($"{Esc(property.Identifier.ValueText)} & {Esc(property.Modifiers.ToString())} & {Esc(property.Type.ToString())} & {Esc(al)} & {Esc(doc.CommentField("summary"))} \\\\");
         }
 
+        /// <summary>Adds a method description to the member table of its class.</summary>
         public override void OnMethod(MethodDeclarationSyntax method, DocumentationCommentTriviaSyntax doc)
         {
             this[method].AddMethod($"{Esc(method.Identifier.ValueText)} & {Esc(method.Modifiers.ToString())} & {Esc(method.ReturnType.ToString())} & {Esc(method.ParameterList.ToString())} & {Esc(doc.CommentField("summary"))} \\\\");
         }
 
+        /// <summary>Escapes a string for safe inclusion in a LaTeX table.</summary>
         private static string Esc(string s) => s.Replace(@"\", @"\\").Replace(@"&", @"\&");
 
+        /// <summary>Finds the class name of a given member.</summary>
         private static string ClassKey(SyntaxNode syntax) => syntax.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First().Identifier.ValueText;
 
         private ClassMembers this[SyntaxNode node]

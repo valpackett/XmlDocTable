@@ -6,8 +6,10 @@ using Microsoft.CodeAnalysis.CSharp;
 
 namespace XmlDocTableCli
 {
+    /// <summary>The command line interface.</summary>
     class Program
     {
+        /// <summary>The main method.</summary>
         static void Main(string[] args)
         {
             var walker = new TexTableWalker();
