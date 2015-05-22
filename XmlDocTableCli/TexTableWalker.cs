@@ -64,7 +64,7 @@ namespace XmlDocTableCli
         public override void OnField(FieldDeclarationSyntax field, DocumentationCommentTriviaSyntax doc)
         {
             foreach (var variable in field.Declaration.Variables)
-                this[field].AddField($"{Esc(variable.Identifier.ValueText)} & {Esc(field.Modifiers.ToString())} & {Esc(field.Declaration.Type.ToString())} & {Esc(doc.CommentField("summary"))} \\\\");
+                this[field].AddField($"{Esc(variable.Identifier.ValueText)} & {Esc(field.Modifiers.ToString())} & {Esc(field.Declaration.Type.ToString())} & \\multicolumn{{2}}{{l}}{{ {Esc(doc.CommentField("summary"))} }} \\\\");
         }
 
         /// <summary>Adds a property description to the member table of its class.</summary>
