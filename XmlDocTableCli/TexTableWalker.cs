@@ -71,7 +71,7 @@ namespace XmlDocTableCli
         public override void OnProperty(PropertyDeclarationSyntax property, DocumentationCommentTriviaSyntax doc)
         {
             var al = property.AccessorList?.ToString() ?? "{ get; }"; // C# 6.0 short expression syntax means no AccessorList
-            al = Regex.Replace(al, @"(get|set)\s*\{.*\}", @"$1");
+            al = Regex.Replace(al, @"([sg]et)\s*\{[^}]*}", @"$1");
             al = Regex.Replace(al, @"\s+", " ");
             this[property].AddProperty($"{Esc(property.Identifier.ValueText)} & {Esc(property.Modifiers.ToString())} & {Esc(property.Type.ToString())} & {Esc(al)} & {Esc(doc.CommentField("summary"))} \\\\");
         }
@@ -83,7 +83,20 @@ namespace XmlDocTableCli
         }
 
         /// <summary>Escapes a string for safe inclusion in a LaTeX table.</summary>
-        private static string Esc(string s) => s.Replace(@"\", @"\\").Replace(@"&", @"\&");
+        private static string Esc(string s)
+        {
+            s = s.Replace(@"\", @"\textbackslash{}")
+                .Replace("^", @"\textasciicircum{}")
+                .Replace("~", @"\textasciitilde{}");
+            s = Regex.Replace(s, @"([#\$%&_\{}])", @"\$1");
+            s = s.Replace("---", "{-}{-}{-}")
+                .Replace("--", "{-}{-}")
+                .Replace("<", @"{\tt <}\-")
+                .Replace(">", @"\-{\tt >}");
+            s = Regex.Replace(s, @"([a-z])([A-Z])", @"$1\-$2"); // Hyphenation for CamelCase
+            s = s.Replace(@"La\-Te\-X", @"\LaTeX{}");
+            return s;
+        }
 
         /// <summary>Finds the class name of a given member.</summary>
         private static string ClassKey(SyntaxNode syntax) => syntax.AncestorsAndSelf().OfType<ClassDeclarationSyntax>().First().Identifier.ValueText;

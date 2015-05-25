@@ -2,14 +2,29 @@
 \usepackage[a4paper,margin=1.5cm,footskip=.5cm]{geometry}
 
 \usepackage{fontspec, xltxtra, polyglossia, microtype}
-\usepackage{tabu, booktabs} % Required for XmlDocTable!
+\usepackage{longtable, tabu, booktabs} % Required for XmlDocTable!
 \usepackage[table, usenames]{xcolor}
 \setmainfont{CMU Serif}
 \setromanfont{CMU Serif}
+
 
 \begin{document}
 	\section{Generated docs for XmlDocTable itself}
 	\tabulinesep = 2mm
 	\rowcolors{2}{green!10}{pink!15}
+	\newcommand{\xdtbeforeclasses}{\subsection{Classes!}}
+	\newcommand{\xdtbeforemembers}{\subsection{Members!}}
+	\newcommand{\xdtbeforemembersof}[1]{\subsubsection{Members of \texttt{#1}}}
+	\newcommand{\xdtClasses}{Classes}
+	\newcommand{\xdtFields}{Fields}
+	\newcommand{\xdtProperties}{Properties}
+	\newcommand{\xdtMethods}{Methods}
+	\newcommand{\xdtMemberName}{Name}
+	\newcommand{\xdtModifiers}{Modifiers}
+	\newcommand{\xdtType}{Type}
+	\newcommand{\xdtReturnType}{Return Type}
+	\newcommand{\xdtAccessors}{Accessors}
+	\newcommand{\xdtParameters}{Parameters}
+	\newcommand{\xdtDescription}{Description}
 	\input{generated}
 \end{document}
