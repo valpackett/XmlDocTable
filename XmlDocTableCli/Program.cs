@@ -38,7 +38,7 @@ namespace XmlDocTableCli
                 if (table.Value.FieldsCount > 0)
                 {
                     Header(5, @"\xdtFields");
-                    sb.AppendLine(@"\textbf{\xdtMemberName} & \textbf{\xdtModifiers} & \textbf{\xdtType} & \multicolumn{2}{l}{\textbf{\xdtDescription}} \\");
+                    sb.AppendLine(@"\textbf{\xdtMemberName} & \textbf{\xdtModifiers} & \textbf{\xdtType} & " + TexTableWalker.Multicol(@"\textbf{\xdtDescription}") + @" \\");
                     sb.Append(table.Value.FieldsTable);
                 }
                 if (table.Value.PropertiesCount > 0)
@@ -46,6 +46,12 @@ namespace XmlDocTableCli
                     Header(5, @"\xdtProperties");
                     sb.AppendLine(@"\textbf{\xdtMemberName} & \textbf{\xdtModifiers} & \textbf{\xdtType} & \textbf{\xdtAccessors} & \textbf{\xdtDescription} \\");
                     sb.Append(table.Value.PropertiesTable);
+                }
+                if (table.Value.ConstructorsCount > 0)
+                {
+                    Header(5, @"\xdtConstructors");
+                    sb.AppendLine(@"\textbf{\xdtMemberName} & \textbf{\xdtModifiers} & \textbf{\xdtParameters} & " + TexTableWalker.Multicol(@"\textbf{\xdtDescription}") + @" \\");
+                    sb.Append(table.Value.ConstructorsTable);
                 }
                 if (table.Value.MethodsCount > 0)
                 {
